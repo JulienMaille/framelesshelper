@@ -23,11 +23,13 @@
  */
 
 #include "../../framelesswindowsmanager.h"
+#include "../../qtacrylicwidget.h"
 #include "ui_MainWindow.h"
 #include "ui_TitleBar.h"
 #include <QApplication>
 #include <QStyleOption>
 #include <QWidget>
+#include <QWindow> 
 
 int main(int argc, char *argv[])
 {
@@ -54,7 +56,7 @@ int main(int argc, char *argv[])
 
     QApplication application(argc, argv);
 
-    QMainWindow *mainWindow = new QMainWindow;
+    QMainWindow *mainWindow = new QtAcrylicWidget;
     Ui::MainWindow appMainWindow;
     appMainWindow.setupUi(mainWindow);
 
@@ -64,7 +66,6 @@ int main(int argc, char *argv[])
 
     QMenuBar *menuBar = mainWindow->menuBar();
     titleBarWidget.horizontalLayout->insertWidget(1, menuBar);
-    menuBar->setMaximumHeight(20);
 
     mainWindow->setMenuWidget(widget);
 
@@ -104,6 +105,10 @@ int main(int argc, char *argv[])
 
     mainWindow->createWinId(); // Qt's internal function, make sure it's a top level window.
     const QWindow *win = mainWindow->windowHandle();
+
+    const qreal m = 1.0 / win->devicePixelRatio();
+    mainWindow->setContentsMargins(m, m, m, m);
+
     FramelessWindowsManager::addWindow(win);
     FramelessWindowsManager::addIgnoreObject(win, titleBarWidget.minimizeButton);
     FramelessWindowsManager::addIgnoreObject(win, titleBarWidget.maximizeButton);

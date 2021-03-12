@@ -25,10 +25,10 @@
 #pragma once
 
 #include "framelesshelper_global.h"
-#include <QtWidgets/qwidget.h>
+#include <QtWidgets/QMainWindow.h>
 #include "qtacryliceffecthelper.h"
 
-class FRAMELESSHELPER_EXPORT QtAcrylicWidget : public QWidget
+class FRAMELESSHELPER_EXPORT QtAcrylicWidget : public QMainWindow
 {
     Q_OBJECT
     Q_DISABLE_COPY_MOVE(QtAcrylicWidget)

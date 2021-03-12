@@ -29,7 +29,7 @@
 #include <QtGui/qevent.h>
 #include <QtGui/qpainter.h>
 
-QtAcrylicWidget::QtAcrylicWidget(QWidget *parent) : QWidget(parent)
+QtAcrylicWidget::QtAcrylicWidget(QWidget *parent) : QMainWindow(parent)
 {
     setAutoFillBackground(false);
     setAttribute(Qt::WA_NoSystemBackground);
