@@ -171,3 +171,10 @@ void QtAcrylicWidget::paintEvent(QPaintEvent *event)
     }
     QWidget::paintEvent(event);
 }
+
+void QtAcrylicWidget::changeEvent(QEvent* event)
+{
+    if( event->type()==QEvent::WindowStateChange )
+        Q_EMIT windowStateChanged();
+    QMainWindow::changeEvent(event);
+}

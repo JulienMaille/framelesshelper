@@ -68,10 +68,12 @@ Q_SIGNALS:
     void frameVisibleChanged();
     void frameColorChanged();
     void frameThicknessChanged();
+    void windowStateChanged();
 
 protected:
     void showEvent(QShowEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
+    void changeEvent(QEvent* event);
 
 private:
     QtAcrylicEffectHelper m_acrylicHelper;

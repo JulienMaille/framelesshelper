@@ -29,7 +29,7 @@
 #include <QApplication>
 #include <QStyleOption>
 #include <QWidget>
-#include <QWindow> 
+#include <QWindow>
 
 int main(int argc, char *argv[])
 {
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
     QApplication application(argc, argv);
 
-    QMainWindow *mainWindow = new QtAcrylicWidget;
+    QtAcrylicWidget *mainWindow = new QtAcrylicWidget;
     Ui::MainWindow appMainWindow;
     appMainWindow.setupUi(mainWindow);
 
@@ -90,10 +90,8 @@ int main(int argc, char *argv[])
                      [mainWindow, titleBarWidget]() {
                          if (mainWindow->isMaximized()) {
                              mainWindow->showNormal();
-                             titleBarWidget.maximizeButton->setToolTip(QObject::tr("Maximize"));
                          } else {
                              mainWindow->showMaximized();
-                             titleBarWidget.maximizeButton->setToolTip(QObject::tr("Restore"));
                          }
                      });
 
@@ -105,9 +103,23 @@ int main(int argc, char *argv[])
 
     mainWindow->createWinId(); // Qt's internal function, make sure it's a top level window.
     const QWindow *win = mainWindow->windowHandle();
-
-    const qreal m = 1.0 / win->devicePixelRatio();
-    mainWindow->setContentsMargins(m, m, m, m);
+    
+    QObject::connect(mainWindow,
+                     &QtAcrylicWidget::windowStateChanged,
+                     [mainWindow, titleBarWidget, win]() {
+                         if (mainWindow->isMaximized()) {
+                            mainWindow->setContentsMargins(0, 0, 0, 0);
+                            
+                            titleBarWidget.maximizeButton->setChecked(true);
+                            titleBarWidget.maximizeButton->setToolTip(QObject::tr("Restore"));
+                         } else {
+                            const qreal m = 1.0 / win->devicePixelRatio();
+                            mainWindow->setContentsMargins(m, m, m, m);
+                            
+                            titleBarWidget.maximizeButton->setChecked(false);
+                            titleBarWidget.maximizeButton->setToolTip(QObject::tr("Maximize"));
+                         }
+                     });
 
     FramelessWindowsManager::addWindow(win);
     FramelessWindowsManager::addIgnoreObject(win, titleBarWidget.minimizeButton);
@@ -116,6 +128,7 @@ int main(int argc, char *argv[])
     FramelessWindowsManager::addIgnoreObject(win, appMainWindow.menubar);
 
     mainWindow->resize(800, 600);
+    Q_EMIT mainWindow->windowStateChanged();
 
     mainWindow->show();
 
